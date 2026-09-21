@@ -1,5 +1,5 @@
 function spec = relift_tree_to_spec(tree, node_id)
-%RELIFT_TREE_TO_SPEC 把矩阵树转换成便于修改的嵌套结构。
+%RELIFT_TREE_TO_SPEC Convert the matrix representation to a nested tree.
 
 leaf_nodes = tree_LeafNode(tree);
 if ismember(node_id, leaf_nodes)

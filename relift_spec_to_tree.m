@@ -1,5 +1,5 @@
 function tree = relift_spec_to_tree(root_spec)
-%RELIFT_SPEC_TO_TREE 把嵌套结构重新还原成矩阵树表示。
+%RELIFT_SPEC_TO_TREE Convert a nested tree back to the matrix representation.
 
 leaf_labels = sort(unique(collect_leaves(root_spec)));
 num_leaves = max(leaf_labels);
@@ -9,8 +9,7 @@ next_id = num_leaves + 1;
 root_id = emit_node(root_spec, 0);
 parent(root_id) = 0;
 parent = parent(1:next_id-1);
-levels = compute_levels(parent);
-tree = [parent, levels];
+tree = [parent, compute_levels(parent)];
 
     function node_id = emit_node(spec, parent_id)
         if isnumeric(spec)
@@ -33,7 +32,6 @@ tree = [parent, levels];
 end
 
 function leaves = collect_leaves(spec)
-
 if isnumeric(spec)
     leaves = spec;
     return;
@@ -46,7 +44,6 @@ end
 end
 
 function levels = compute_levels(parent)
-
 levels = zeros(size(parent));
 root = find(parent == 0, 1);
 nodes = root;

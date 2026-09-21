@@ -1,37 +1,13 @@
-function [state, W_full] = relift_train_state(train_data, tree, dataset_name, fs_cfg, warm_W)
+function state = relift_train_state(train_data, tree, dataset_name, cfg)
 %RELIFT_TRAIN_STATE Train MIMR feature selectors and linear SVM models.
 
-if nargin < 4 || isempty(fs_cfg)
-    fs_cfg = struct();
-end
-if nargin < 5
-    warm_W = {};
-end
-if isfield(fs_cfg, 'clf_method') && ~isempty(fs_cfg.clf_method) && ...
-        ~strcmpi(char(string(fs_cfg.clf_method)), 'SVM')
-    error('CHACF:UnsupportedClassifier', ...
-        'This release supports only the linear SVM classifier.');
-end
-
-if ~isempty(warm_W) || nargout >= 2
-    [feature_slct, W_full] = relift_feature_select( ...
-        train_data, tree, fs_cfg, warm_W);
-else
-    feature_slct = relift_feature_select(train_data, tree, fs_cfg);
-    W_full = {};
-end
+feature_slct = relift_feature_select(train_data, tree, cfg);
 num_feature = size(train_data, 2) - 1;
-numberSel = relift_select_feature_count(num_feature, dataset_name, fs_cfg);
+numberSel = relift_select_feature_count(num_feature, dataset_name, cfg);
 
 [trainDataMod, trainLabelMod] = creatSubTablezh(train_data, tree);
 leaf_nodes = tree_LeafNode(tree);
 models = cell(size(tree, 1), 1);
-
-if isfield(fs_cfg, 'svm_cmd') && ~isempty(fs_cfg.svm_cmd)
-    svm_cmd = fs_cfg.svm_cmd;
-else
-    svm_cmd = '-c 1 -t 0 -q';
-end
 
 for node_id = 1:size(tree, 1)
     if ismember(node_id, leaf_nodes)
@@ -46,7 +22,7 @@ for node_id = 1:size(tree, 1)
     selected = feature_slct{node_id}( ...
         1:min(numberSel, numel(feature_slct{node_id})));
     models{node_id} = svmtrain( ...
-        train_labels, train_features(:, selected), svm_cmd);
+        train_labels, train_features(:, selected), cfg.svm_cmd);
 end
 
 state = struct();
@@ -54,6 +30,4 @@ state.tree = tree;
 state.feature_slct = feature_slct;
 state.models = models;
 state.numberSel = numberSel;
-state.clf_method = "svm";
-state.scaler = [];
 end

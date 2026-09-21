@@ -1,12 +1,14 @@
 function leaf_ids = relift_leaf_descendants(tree, node_id)
-%RELIFT_LEAF_DESCENDANTS 取出某个节点下面的全部叶子标签。
+%RELIFT_LEAF_DESCENDANTS Return all leaf labels below a node.
 
-leaf_nodes = tree_LeafNode(tree);
-if ismember(node_id, leaf_nodes)
+leaf_ids = [];
+children = get_children_set(tree, node_id);
+if isempty(children)
     leaf_ids = node_id;
     return;
 end
 
-descendants = tree_Descendant(tree, node_id);
-leaf_ids = descendants(ismember(descendants, leaf_nodes));
+for i = 1:numel(children)
+    leaf_ids = [leaf_ids; relift_leaf_descendants(tree, children(i))]; %#ok<AGROW>
+end
 end

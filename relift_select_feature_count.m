@@ -1,18 +1,14 @@
-function numberSel = relift_select_feature_count(numFeature, dataset_name, fs_cfg)
-%RELIFT_SELECT_FEATURE_COUNT 按原始 HCP 规则确定每个节点选多少特征。
+function numberSel = relift_select_feature_count(num_feature, dataset_name, cfg)
+%RELIFT_SELECT_FEATURE_COUNT Choose the number of features used at each node.
 
-if nargin >= 3 && isfield(fs_cfg, 'feature_select_ratio') && ~isempty(fs_cfg.feature_select_ratio)
-    numberSel = round(numFeature * fs_cfg.feature_select_ratio);
-    numberSel = max(numberSel, 1);
+if ~isempty(cfg.feature_select_ratio)
+    numberSel = max(1, round(num_feature * cfg.feature_select_ratio));
     return;
 end
 
-if strcmp(dataset_name, 'DD') || strcmp(dataset_name, 'F194')
-    ratio_flag = 1;
+if strcmpi(dataset_name, 'AWAphog')
+    numberSel = min(300, num_feature);
 else
-    ratio_flag = 2;
+    numberSel = min(200, num_feature);
 end
-
-numberSel = round(numFeature * ratio_flag * 0.1);
-numberSel = max(numberSel, 1);
 end
