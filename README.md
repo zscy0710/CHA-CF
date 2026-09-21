@@ -61,6 +61,6 @@ CHA-CF accepts two local hierarchy updates in this run.
 
 - `run_awa_mimr.m`: experiment entry point.
 - `check_run_awa_mimr.m`: result check.
-- `run_relift_case.m` and `relift_*.m`: CHA-CF implementation.
+- `chacf_*.m`: CHA-CF implementation.
 - `private/`: HFS-MIMR utilities, hierarchical metrics, and LIBSVM binaries.
 - `datasets/`: AWAphog training and test data.
