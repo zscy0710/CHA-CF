@@ -2,8 +2,8 @@ function result = run_experiment()
 %RUN_EXPERIMENT Run the CHA-CF experiment on the bundled dataset.
 
 root = fileparts(mfilename('fullpath'));
-train = load(fullfile(root, 'datasets', 'AWAphogTrain.mat'));
-test = load(fullfile(root, 'datasets', 'AWAphogTest.mat'));
+train = load(fullfile(root, 'datasets', 'F194Train.mat'));
+test = load(fullfile(root, 'datasets', 'F194Test.mat'));
 opt = options();
 
 trainData = train.data_array;
