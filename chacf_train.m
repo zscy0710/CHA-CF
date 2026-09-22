@@ -1,7 +1,7 @@
 function state = chacf_train(data, tree, opt)
 [X, Y] = create_SubTable2(data, tree);
-feature = chacf_mimr(X, Y, tree, opt.mimrLambda, opt.mimrAlpha, ...
-    opt.mimrBeta, opt.mimrIter);
+feature = select_features(X, Y, tree, opt.fsLambda, opt.fsAlpha, ...
+    opt.fsBeta, opt.fsIter);
 [trainData, trainLabel] = creatSubTablezh(data, tree);
 leaf = tree_LeafNode(tree);
 models = cell(size(tree, 1), 1);
@@ -20,7 +20,7 @@ state.models = models;
 state.nFeature = nFeature;
 end
 
-function feature = chacf_mimr(X, Y, tree, lambda, alpha, beta, maxIter)
+function feature = select_features(X, Y, tree, lambda, alpha, beta, maxIter)
 internal = tree_InternalNodes(tree);
 internal(internal == -1) = [];
 root = tree_Root(tree);
